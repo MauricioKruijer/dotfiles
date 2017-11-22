@@ -17,3 +17,6 @@ for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
     ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
   fi
 done
+
+# Change prompt
+sed -i '' "s/theme 'sorin'/theme 'steeef'/" ${HOME}/.zpreztorc
