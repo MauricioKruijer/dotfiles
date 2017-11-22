@@ -1,0 +1,33 @@
+#!/bin/bash
+# curl -fsSL https://raw.github.com/MauricioKruijer/dotfiles/master/src/install | sh
+set -u
+
+DOTFILES_DIR="$HOME/.dotfiles"
+
+if [[ ! -d $DOTFILES_DIR ]]; then
+  git clone --recursive https://github.com/MauricioKruijer/dotfiles.git "$DOTFILES_DIR"
+else
+  cd "$DOTFILES_DIR" && \
+  git stash && \
+  git checkout master && \
+  git reset --hard origin/master && \
+  git submodule update --init --recursive && \
+  git checkout - && \
+  git stash pop
+fi
+
+source "$DOTFILES_DIR/src/vars/colors.sh"
+
+cd $DOTFILES_DIR
+cat <<EOF
+$COLOR_BLUE
+                      $COLOR_RESET~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~$COLOR_BLUE
+                      $COLOR_RESET$COLOR_BLUE
+                      $COLOR_RESET   $(git log -n 1 --pretty=format:'%C(yellow)commit:  %h') $COLOR_BLUE
+                      $COLOR_RESET   $(git log -n 1 --pretty=format:'%C(red)date:    %ad' --date=short) $COLOR_BLUE
+                      $COLOR_RESET   $(git log -n 1 --pretty=format:'%C(cyan)author:  %an') $COLOR_BLUE
+                      $COLOR_RESET   $(git log -n 1 --pretty=format:'%C(green)message: %s') $COLOR_BLUE
+                      $COLOR_RESET$COLOR_BLUE
+                      $COLOR_RESET~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~$COLOR_BLUE
+$COLOR_RESET
+EOF
