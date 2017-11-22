@@ -1,9 +1,7 @@
 # This can be overriden by doing `make DEST=some/path <task>`
 DEST = "$(HOME)/.dotfiles"
 SRC = "$(DEST)/src"
-
-PREZTO := ~/.zprezto
-
+PREZTO = ~/.zprezto
 OS_SUPPORT = "10.12.[6]"
 
 help:
@@ -28,3 +26,5 @@ check-macos-version:
 	$(eval OS_VERSION = $(shell defaults read loginwindow SystemVersionStampAsString))
 	@echo $(OS_VERSION) | grep -q -E $(OS_SUPPORT) || { echo 'macOS version ($(OS_VERSION)) is not supported'; exit 1; }
 	$(info --> macOS version $(OS_VERSION) is supported)
+
+.PHONY: help install install-prezto configure-prezto check-macos-version
