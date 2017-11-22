@@ -4,11 +4,15 @@ SRC = "$(DEST)/src"
 
 PREZTO := ~/.zprezto
 
+OS_SUPPORT = "10.12.[6]"
+
 help:
 	@echo Run make install
 
 install:
-	 @make install-prezto
+	@make check-macos-version
+	@make install-prezto
+	$(info --> Finished! Run chsh -s /bin/zsh)
 
 install-prezto: 
 	$(info --> Install prezto)
@@ -20,5 +24,7 @@ configure-prezto:
 	$(info --> Configure prezto)
 	@sh $(SRC)/configure-prezto.sh
 
-change-shell:
-	@chsh -s /bin/zsh
+check-macos-version:
+	$(eval OS_VERSION = $(shell defaults read loginwindow SystemVersionStampAsString))
+	@echo $(OS_VERSION) | grep -q -E $(OS_SUPPORT) || { echo 'macOS version ($(OS_VERSION)) is not supported'; exit 1; }
+	$(info --> macOS version $(OS_VERSION) is supported)
