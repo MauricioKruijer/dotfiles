@@ -4,6 +4,28 @@ set -u
 
 DOTFILES_DIR="$HOME/.dotfiles"
 
+check=$(xcode-select --install 2>&1)
+str="xcode-select: note: install requested for command line developer tools"
+while [[ "$check" == "$str" ]];
+do
+  echo "--> Installing command line developer tools..."
+  sleep 1
+  osascript >/dev/null 2>&1 <<END
+    activate application "Install Command Line Developer Tools"
+    tell application "Install Command Line Developer Tools"
+        activate
+        tell application "System Events"
+            click button "Install" of window 1 of process "Install Command Line Developer Tools"
+            click button "Agree" of window "License Agreement" of process "Install Command Line Developer Tools"
+        end tell
+    end tell
+END
+sleep 60
+check=$(xcode-select --install 2>&1)
+done
+echo "--> Command line developer tools install finished!"
+
+
 if [[ ! -d $DOTFILES_DIR ]]; then
   git clone --recursive https://github.com/MauricioKruijer/dotfiles.git "$DOTFILES_DIR"
 else
